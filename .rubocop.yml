@@ -1,0 +1,4 @@
+# This allows classes without a top-level
+# documentation comment
+Style/Documentation:
+  Enabled: false

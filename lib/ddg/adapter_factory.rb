@@ -8,9 +8,7 @@ module DDG
       def adapter(adapter, config)
         case adapter
         when :postgresql
-          PostgreSQLAdapter.new(config)
-        else
-          nil
+          Adapter::PostgreSQLAdapter.new(config)
         end
       end
     end
