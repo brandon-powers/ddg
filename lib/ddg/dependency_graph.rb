@@ -22,6 +22,7 @@ module DDG
       build_graph unless graph_built?
 
       @evaluation_order = @graph.topsort_iterator.to_a.reverse
+      @evaluation_order.each { |table| yield(table) } if block_given?
       @evaluation_order
     end
 
