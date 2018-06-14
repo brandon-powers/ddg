@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+set -vx
+
+bundle install
+
+# This is required if you want to generate visualizations.
+sudo apt install graphviz
