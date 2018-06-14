@@ -60,10 +60,10 @@ require 'dependency_graph'
 
 graph = DependencyGraph.new(
   adapter: :postgresql,
-  database: 'lfmdw',
-  user: 'lfm_ro',
+  database: 'database',
+  user: 'user',
   password: 'password',
-  port: 14379,
+  port: 12345,
   host: 'www.example.com'
 )
 
