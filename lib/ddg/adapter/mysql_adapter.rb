@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'ddg/adapter/base_adapter'
-require 'pg'
+require 'ruby-mysql'
 
 module DDG
   module Adapter
-    class PostgreSQLAdapter < BaseAdapter
+    class MySQLAdapter < BaseAdapter
       def initialize(config)
         @db = PG::Connection.open(
           host: config[:host],

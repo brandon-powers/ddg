@@ -12,7 +12,7 @@ namespace :ddg do
   desc 'Print the evaluation order of the database specified by the environment'
   task :evaluation_order do
     ddg = DDG::DependencyGraph.new(
-      :postgresql,
+      ENV['ADAPTER'].to_sym,
       host: ENV['HOST'],
       port: ENV['PORT'],
       database: ENV['DATABASE'],

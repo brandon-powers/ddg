@@ -6,5 +6,11 @@ set -vx
 
 bundle install
 
+# This installs the machine requirements to
+# interact with these data stores.
+sudo apt-get install postgresql-10
+sudo apt-get install mysql-server
+sudo apt-get install libmysqlclient-dev
+
 # This is required if you want to generate visualizations.
-sudo apt install graphviz
+sudo apt-get install graphviz

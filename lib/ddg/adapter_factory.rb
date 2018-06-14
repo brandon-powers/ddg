@@ -7,8 +7,10 @@ module DDG
     class << self
       def adapter(adapter, config)
         case adapter
-        when :postgresql
+        when :postgresql, :redshift
           Adapter::PostgreSQLAdapter.new(config)
+        when :mysql
+          Adapter::MySQLAdapter.new(config)
         end
       end
     end
