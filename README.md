@@ -2,6 +2,20 @@
 
   The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
 
+TODO:
+- Figure out how to test the dependency graph for each supported data store. As well as the adapter behavior itself. Really, set up a test structure to reliably test this stuff.
+- Implement a CLI, explain the programmatic interface clearly as well
+- Clean up and add to the README
+- Tag/release gem at 0.1.0 and publish it to RubyGems (test if it's as easy as `gem install dgg`)
+- Add a CHANGELOG.md, add that this gem relies on SemVer with a link
+- Clearly define interfaces
+- Provide examples of why this is useful, such as for data pipelines during ETL, for a dependent load order, or other use cases. Highlight all of the use cases clearly, with both interfaces.
+- Create a gif at the top-level of the README to demonstrate basic usage to grab attention. Maybe a logo?
+- Clearly define external dependencies
+- Explain design/architecture decisions, trade-offs, reasoning. Duck-typing over abstract class-like inheritance, adapter factory.
+- Contribution? Include easy ways to contribute.
+- Git hooks?
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -45,6 +59,11 @@ Adapter
 ## Supported Adapters
 
 The goal is to rely on the `information_schema` standard of most relational databases. With that being said, any relational data store that supports the information schema standard, is also supported by this gem.
+
+At the moment:
+
+- PostgreSQL, Redshift
+- MySQL
 
 ## DependencyGraph Interface
 
