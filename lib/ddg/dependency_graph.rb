@@ -26,18 +26,18 @@ module DDG
       @evaluation_order
     end
 
-    private
-
-    def graph_built?
-      !@graph.edges.empty? && !@graph.vertices.empty?
-    end
-
     def build_graph
       @adapter.tables_with_foreign_keys.each do |table, foreign_keys|
         foreign_keys.each do |foreign_key|
           @graph.add_edge(table, foreign_key)
         end
       end
+    end
+
+    private
+
+    def graph_built?
+      !@graph.edges.empty? && !@graph.vertices.empty?
     end
   end
 end

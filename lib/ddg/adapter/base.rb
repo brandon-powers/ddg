@@ -2,7 +2,7 @@
 
 module DDG
   module Adapter
-    class BaseAdapter
+    class Base
       # Retrieves a mapping from table to a
       # set of its foreign key constraints.
       #

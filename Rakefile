@@ -30,3 +30,27 @@ namespace :ddg do
     puts(ddg.evaluation_order)
   end
 end
+
+namespace :db do
+  namespace :setup do
+    desc 'Creates a PostgreSQL database with tables ' \
+         'that have referential constraints on each other'
+    task :postgresql do
+    end
+
+    desc 'Creates a MySQL database with tables ' \
+         'that have referential constraints on each other'
+    task :mysql do
+    end
+  end
+
+  namespace :teardown do
+    desc 'Deletes the PostgreSQL database created with db:setup:postgresql'
+    task :postgresql do
+    end
+
+    desc 'Deletes the MySQL database created with db:setup:mysql'
+    task :mysql do
+    end
+  end
+end

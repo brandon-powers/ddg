@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'ddg/adapter/postgresql_adapter'
+require 'ddg/adapter/postgresql'
+require 'ddg/adapter/mysql'
 
 module DDG
   class AdapterFactory
@@ -8,9 +9,9 @@ module DDG
       def adapter(adapter, config)
         case adapter
         when :postgresql, :redshift
-          Adapter::PostgreSQLAdapter.new(config)
+          Adapter::PostgreSQL.new(config)
         when :mysql
-          Adapter::MySQLAdapter.new(config)
+          Adapter::MySQL.new(config)
         end
       end
     end

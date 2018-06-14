@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-require 'ddg/adapter/base_adapter'
-require 'mysql2'
+require 'ddg/adapter/base'
+require 'pg'
 
 module DDG
   module Adapter
-    class MySQLAdapter < BaseAdapter
+    class PostgreSQL < Base
       def initialize(config)
-        @db = Mysql2::Client.new(
+        @db = PG::Connection.open(
           host: config[:host],
           port: config[:port],
-          username: config[:user],
+          user: config[:user],
           password: config[:password],
-          database: config[:database]
+          dbname: config[:database]
         )
       end
     end
