@@ -22,7 +22,21 @@ module DDG
       #
       # @return [Hash]
       def tables_with_foreign_keys
-        sql = <<~SQL
+        records = @db.exec(foreign_key_sql).to_a
+
+        records.each_with_object({}) do |record, table_to_fk|
+          table_name = record['table_name'].to_sym
+          referenced_table_name = record['referenced_table_name'].to_sym
+
+          table_to_fk[table_name] = [] unless table_to_fk.key?(table_name)
+          table_to_fk[table_name] << referenced_table_name
+        end
+      end
+
+      private
+
+      def foreign_key_sql
+        <<~SQL
           SELECT
             kcu1.table_name AS table_name,
             kcu2.table_name AS referenced_table_name
@@ -38,16 +52,6 @@ module DDG
             AND kcu2.ordinal_position = kcu1.ordinal_position
           ;
         SQL
-
-        records = @db.exec(sql).to_a
-
-        records.each_with_object({}) do |record, table_to_fk|
-          table_name = record['table_name'].to_sym
-          referenced_table_name = record['referenced_table_name'].to_sym
-
-          table_to_fk[table_name] = [] unless table_to_fk.key?(table_name)
-          table_to_fk[table_name] << referenced_table_name
-        end
       end
     end
   end
