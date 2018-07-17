@@ -1,0 +1,11 @@
+ADAPTER=postgresql
+USER=user
+PASSWORD=password
+DATABASE=database
+HOST=host
+PORT=port
+TEST_USER=ddg_test_user
+TEST_PASSWORD=ddg_test_password
+TEST_DATABASE=ddg_test_db
+TEST_HOST=localhost
+TEST_PORT=5432
