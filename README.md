@@ -3,17 +3,14 @@
   The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
 
 TODO:
-- Implement a CLI, explain the programmatic interface clearly as well
-- Clean up and add to the README
-- Tag/release gem at 0.1.0 and publish it to RubyGems (test if it's as easy as `gem install dgg`)
-- Add a CHANGELOG.md, add that this gem relies on SemVer with a link
-- Clearly define interfaces
-- Provide examples of why this is useful, such as for data pipelines during ETL, for a dependent load order, or other use cases. Highlight all of the use cases clearly, with both interfaces.
-- Create a gif at the top-level of the README to demonstrate basic usage to grab attention. Maybe a logo?
-- Clearly define external dependencies
-- Explain design/architecture decisions, trade-offs, reasoning. Duck-typing over abstract class-like inheritance, adapter factory.
-- Contribution? Include easy ways to contribute.
-- Git hooks?
+- Ruby, CLI, Rake--three interfaces to using this code.
+- Provide an example application that uses this gem, be it in this repository or a separate one. Reference example in this README.
+- Clearly define design/architectural goals for this project (i.e. duck-typing vs. abstract class).
+- Add benchmark testing and measurement.
+- Add a CHANGELOG.md (with a note in the README on SemVer support).
+- Create a GIF at the top-level of the README to demonstrate basic usage and grab attention.
+- Clearly define external dependencies.
+- Tag gem at 0.1.0 and publish it to RubyGems.
 
 ## Installation
 
@@ -107,6 +104,8 @@ $ dg -a postgresql -d dev -u dev_ro -x password123 -p 16379 -h dev.com --evaluat
 ```
 
 ## Contributing
+
+Make sure to copy the `hooks/` directory into your local `.git/hooks/` directory to ensure the git hooks for this project run. Most notably, there exists a pre-commit hook that runs tests and a linter over the code, failing the commit if the tests or linter fails.
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/brandon-powers/ddg.
 
