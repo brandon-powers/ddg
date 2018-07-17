@@ -5,6 +5,7 @@ require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 require 'ddg'
 require 'pg'
+require 'mysql2'
 
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.verbose = false
@@ -50,51 +51,22 @@ namespace :db do
         dbname: ENV['TEST_DATABASE'],
         password: ENV['TEST_PASSWORD']
       )
-
-      create_users_table_sql = <<~SQL
-        CREATE TABLE users (
-          id INTEGER NOT NULL,
-          name VARCHAR,
-          created_at TIMESTAMP,
-          updated_at TIMESTAMP,
-
-          PRIMARY KEY(id)
-        );
-      SQL
-
-      create_reports_table_sql = <<~SQL
-        CREATE TABLE reports (
-          id INTEGER NOT NULL,
-          name VARCHAR,
-          created_at TIMESTAMP,
-          updated_at TIMESTAMP,
-
-          PRIMARY KEY(id)
-        );
-      SQL
-
-      create_user_reports_table_sql = <<~SQL
-        CREATE TABLE user_reports (
-          id INTEGER NOT NULL,
-          user_id INTEGER NOT NULL,
-          report_id INTEGER NOT NULL,
-          created_at TIMESTAMP,
-          updated_at TIMESTAMP,
-
-          PRIMARY KEY(id),
-          FOREIGN KEY (user_id) REFERENCES users(id),
-          FOREIGN KEY (report_id) REFERENCES reports(id)
-        );
-      SQL
-
-      conn.exec(create_users_table_sql)
-      conn.exec(create_reports_table_sql)
-      conn.exec(create_user_reports_table_sql)
+      postgresql_schema = File.read('db/schemata/postgresql.sql')
+      conn.exec(postgresql_schema)
     end
 
     desc 'Creates a MySQL database with tables ' \
          'that have referential constraints on each other'
     task :mysql do
+      # conn = MySql2::Client.new(
+      #   user: ENV['TEST_USER'],
+      #   host: ENV['TEST_HOST'],
+      #   port: ENV['TEST_PORT'],
+      #   database: ENV['TEST_DATABASE'],
+      #   password: ENV['TEST_PASSWORD']
+      # )
+      # mysql_schema = File.read('db/schemata/mysql.sql')
+      # conn.exec(mysql_schema)
     end
   end
 
