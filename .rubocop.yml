@@ -1,6 +1,9 @@
 AllCops:
   Exclude:
     - '*.gemspec'
+    - 'Rakefile'
+    - 'bin/ddg.rb'
+    - 'spec/*/**'
 
 # This allows classes without a top-level
 # documentation comment

@@ -3,7 +3,6 @@
   The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
 
 TODO:
-- Figure out how to test the dependency graph for each supported data store. As well as the adapter behavior itself. Really, set up a test structure to reliably test this stuff.
 - Implement a CLI, explain the programmatic interface clearly as well
 - Clean up and add to the README
 - Tag/release gem at 0.1.0 and publish it to RubyGems (test if it's as easy as `gem install dgg`)
