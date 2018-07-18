@@ -2,12 +2,40 @@
 
   The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
 
+Supported Adapters:
+  - PostgreSQL/Redshift
+  - MySQL
+
+Supported Interfaces:
+  - Programmatically in Ruby
+  - CLI
+  - Rake
+
+Supported Behaviors:
+  - Find a valid evaluation order in the specified database, given referential constraints.
+
+Architecture Goals:
+  - Duck-typing over abstract class hierarchy
+  - Adapter interface that is extensible
+  - Adapter Factory uses Factory OO pattern
+  - Both data warehouses/dimensional models and general-purpose usage, in any relational database
+  - Measured performance and benchmark testing
+  - CI/CD integration with Travis-CI
+  - Example application that uses this gem/functionality
+  - SemVer, CHANGELOG-compliant
+
+There was an initial thought of having a (sort of) abstract class in Ruby to serve as a parent class for any adapter being implemented. This was decided against and is now using the duck typing approach vs. inheritance to enforce the set of behaviors during run-time.
+
+There is a requirement that the user creating the database connection has read access to the `information_schema`.
+
+From the PostgreSQL documentation on information schema querying: "Only those constraints are shown for which the current user has write access to the referencing table (by way of being the owner or having some privilege other than SELECT)."
+
+The SQL to extract the foreign keys of each table was heavily influenced, barring minor changes, from this article: https://msdn.microsoft.com/en-us/library/aa175805(SQL.80).aspx.
+
+Blog Posts on DDG:
+  - https://medium.com/brandon-powers/whyddg (example)
+
 TODO:
-- Ruby, CLI, Rake--three interfaces to using this code.
-- Provide an example application that uses this gem, be it in this repository or a separate one. Reference example in this README.
-- Clearly define design/architectural goals for this project (i.e. duck-typing vs. abstract class).
-- Add benchmark testing and measurement.
-- Add a CHANGELOG.md (with a note in the README on SemVer support).
 - Create a GIF at the top-level of the README to demonstrate basic usage and grab attention.
 - Clearly define external dependencies.
 - Tag gem at 0.1.0 and publish it to RubyGems.
@@ -28,22 +56,6 @@ Or install it yourself as:
 
     $ gem install ddg
 
-## Architecture
-
-This project aims to achieve the following architecture goals:
-
-1. clear, explicit adapter interface for each supported data store to implement
-2. solid, measured performance
-  - expected requirements include database adapters and a graph library
-  - benchmark test with external dependencies vs. writing your own adapters/library
-
-There was an initial thought of having a (sort of) abstract class in Ruby to serve as a parent class for any adapter being implemented. This was decided against and is now using the duck typing approach vs. inheritance to enforce the set of behaviors during run-time.
-
-There is a requirement that the user creating the database connection has read access to the `information_schema`.
-
-From the PostgreSQL documentation on information schema querying: "Only those constraints are shown for which the current user has write access to the referencing table (by way of being the owner or having some privilege other than SELECT)."
-
-The SQL to extract the foreign keys of each table was heavily influenced, barring minor changes, from this article: https://msdn.microsoft.com/en-us/library/aa175805(SQL.80).aspx.
 
 ## Adapter Interface
 
