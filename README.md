@@ -4,6 +4,19 @@
 
   The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
 
+TODO:
+  - Finish implementation and testing of MySQL adapter support.
+  - Add test coverage measurement and increase coverage.
+  - Add benchmark and performance testing.
+  - Fix integration with Travis-CI.
+  - Write documentation on DDG in this README.
+  - Create a GIF at the top-level of the README to demonstrate basic usage and grab attention.
+  - Clearly define external development and testing dependencies.
+  - Tag gem at 0.1.0 and publish it to RubyGems.
+  - Write an example application that uses this gem, and highlight or link it in the documentation here.
+  - Write a blog post on DDG for Medium.
+  - Share blog post and GitHub project on HackerNews, LinkedIn, Twitter, Instagram?, Facebook, Personal Website?.
+
 Supported Adapters:
   - PostgreSQL/Redshift
   - MySQL
@@ -36,11 +49,6 @@ The SQL to extract the foreign keys of each table was heavily influenced, barrin
 
 Blog Posts on DDG:
   - https://medium.com/brandon-powers/whyddg (example)
-
-TODO:
-- Create a GIF at the top-level of the README to demonstrate basic usage and grab attention.
-- Clearly define external dependencies.
-- Tag gem at 0.1.0 and publish it to RubyGems.
 
 ## Installation
 
