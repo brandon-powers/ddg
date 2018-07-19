@@ -58,15 +58,25 @@ namespace :db do
     desc 'Creates a MySQL database with tables ' \
          'that have referential constraints on each other'
     task :mysql do
-      # conn = MySql2::Client.new(
-      #   user: ENV['TEST_USER'],
-      #   host: ENV['TEST_HOST'],
-      #   port: ENV['TEST_PORT'],
-      #   database: ENV['TEST_DATABASE'],
-      #   password: ENV['TEST_PASSWORD']
-      # )
-      # mysql_schema = File.read('db/schemata/mysql.sql')
-      # conn.exec(mysql_schema)
+      create_database_sql = "CREATE DATABASE #{ENV['TEST_DATABASE']}"
+      create_user_with_privileges_sql = <<~SQL
+        GRANT ALL PRIVILEGES ON #{ENV['TEST_DATABASE']}.*
+        TO '#{ENV['TEST_USER']}'@'#{ENV['TEST_HOST']}'
+        IDENTIFIED BY '#{ENV['TEST_PASSWORD']}';
+      SQL
+
+      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{create_database_sql}\"")
+      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{create_user_with_privileges_sql}\"")
+
+      conn = Mysql2::Client.new(
+        username: ENV['TEST_USER'],
+        host: ENV['TEST_HOST'],
+        port: ENV['TEST_PORT'],
+        database: ENV['TEST_DATABASE'],
+        password: ENV['TEST_PASSWORD']
+      )
+      mysql_schema = File.read('db/schemata/mysql.sql')
+      conn.query(mysql_schema)
     end
   end
 
@@ -95,6 +105,24 @@ namespace :db do
 
     desc 'Deletes the MySQL database created with db:setup:mysql'
     task :mysql do
+      conn = Mysql2::Client.new(
+        username: ENV['TEST_USER'],
+        host: ENV['TEST_HOST'],
+        port: ENV['TEST_PORT'],
+        database: ENV['TEST_DATABASE'],
+        password: ENV['TEST_PASSWORD']
+      )
+
+      conn.query('DROP TABLE IF EXISTS users CASCADE;')
+      conn.query('DROP TABLE IF EXISTS reports CASCADE;')
+      conn.query('DROP TABLE IF EXISTS user_reports CASCADE;')
+      conn.close
+
+      drop_database_sql = "DROP DATABASE #{ENV['TEST_DATABASE']};"
+      drop_user_sql = "DROP USER '#{ENV['TEST_USER']}'@'#{ENV['TEST_HOST']}';"
+
+      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{drop_database_sql}\"")
+      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{drop_user_sql}\"")
     end
   end
 end

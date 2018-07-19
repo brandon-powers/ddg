@@ -1,30 +1,30 @@
--- TODO: MySQL-ify this if necessary.
-CREATE TABLE users (
-  id INTEGER NOT NULL,
-  name VARCHAR,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP,
-
-  PRIMARY KEY(id)
-);
-
-CREATE TABLE reports (
-  id INTEGER NOT NULL,
-  name VARCHAR,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP,
-
-  PRIMARY KEY(id)
-);
-
-CREATE TABLE user_reports (
-  id INTEGER NOT NULL,
-  user_id INTEGER NOT NULL,
-  report_id INTEGER NOT NULL,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP,
-
-  PRIMARY KEY(id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (report_id) REFERENCES reports(id)
-);
+-- DROP TABLE IF EXISTS users;
+-- CREATE TABLE users (
+--   id INT(11) NOT NULL AUTO_INCREMENT,
+--   name VARCHAR(45) DEFAULT NULL,
+--   created_at DATE DEFAULT NULL,
+--   updated_at DATE DEFAULT NULL,
+--
+--   PRIMARY KEY (id)
+-- ) ENGINE=InnoDB;
+--
+-- CREATE TABLE reports (
+--   id INT NOT NULL,
+--   name INT NOT NULL,
+--   created_at TIMESTAMP,
+--   updated_at TIMESTAMP,
+--
+--   PRIMARY KEY(id)
+-- );
+--
+-- CREATE TABLE user_reports (
+--   id INT NOT NULL,
+--   user_id INT NOT NULL,
+--   report_id INT NOT NULL,
+--   created_at TIMESTAMP,
+--   updated_at TIMESTAMP,
+--
+--   PRIMARY KEY(id),
+--   FOREIGN KEY (user_id) REFERENCES users(id),
+--   FOREIGN KEY (report_id) REFERENCES reports(id)
+-- );
