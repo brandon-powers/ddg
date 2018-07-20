@@ -4,6 +4,7 @@ AllCops:
     - 'Rakefile'
     - 'bin/ddg.rb'
     - 'spec/*/**'
+    - 'vendor/*'
     - 'vendor/*/**'
 
 Metrics/BlockLength:
