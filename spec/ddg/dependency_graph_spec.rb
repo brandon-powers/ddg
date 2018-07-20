@@ -5,10 +5,12 @@ require 'ddg/dependency_graph'
 RSpec.describe DDG::DependencyGraph do
   before(:all) do
     system('bundle exec rake db:setup:postgresql')
+    system('bundle exec rake db:setup:mysql')
   end
 
   after(:all) do
     system('bundle exec rake db:teardown:postgresql')
+    system('bundle exec rake db:teardown:mysql')
   end
 
   let(:adapter) { :postgresql }
@@ -34,10 +36,19 @@ RSpec.describe DDG::DependencyGraph do
   end
 
   describe '#evaluation_order' do
-    context 'when users, reports, and user_reports exist' do
+    context 'when users, reports, and user_reports exist in a PostgreSQL database' do
       it 'returns the correct evaluation order given referential constraints' do
         graph = DDG::DependencyGraph.new(adapter, config)
         expect(graph.evaluation_order).to eq(%i[users reports user_reports])
+      end
+    end
+
+    context 'when users, reports, and user_reports exist in a MySQL database' do
+      let(:adapter) { :mysql }
+
+      it 'returns the correct evaluation order given referential constraints' do
+        graph = DDG::DependencyGraph.new(adapter, config)
+        expect(graph.evaluation_order).to eq(%i[reports users user_reports])
       end
     end
   end
