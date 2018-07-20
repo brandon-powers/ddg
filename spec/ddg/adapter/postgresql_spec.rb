@@ -23,7 +23,7 @@ RSpec.describe DDG::Adapter::PostgreSQL do
 
   describe '#tables_with_foreign_keys' do
     context 'when there are tables with foreign keys in the database' do
-      let (:expected_table_to_fks) do
+      let(:expected_table_to_fks) do
         {
           user_reports: %i[
             users
