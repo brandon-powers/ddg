@@ -14,6 +14,7 @@ end
 
 RuboCop::RakeTask.new(:rubocop) do |t|
   t.options = ['--display-cop-names']
+  t.options = ['-c', '.rubocop.yml']
 end
 
 task(default: %i[rubocop spec])

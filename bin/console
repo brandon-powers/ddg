@@ -1,9 +1,0 @@
-# frozen_string_literal: true
-#
-#!/usr/bin/env ruby
-
-require 'bundler/setup'
-require 'ddg'
-require 'irb'
-
-IRB.start(__FILE__)
