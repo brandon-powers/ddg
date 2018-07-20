@@ -5,6 +5,10 @@ AllCops:
     - 'bin/ddg.rb'
     - 'spec/*/**'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
 # This allows classes without a top-level
 # documentation comment
 Style/Documentation:
