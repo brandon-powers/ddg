@@ -29,9 +29,6 @@ module DDG
     def build_graph
       @adapter.tables_with_foreign_keys.each do |table, foreign_keys|
         foreign_keys.each do |foreign_key|
-          # Disallow circular references in dependency graph.
-          next if table == foreign_key
-
           @graph.add_edge(table, foreign_key)
         end
       end

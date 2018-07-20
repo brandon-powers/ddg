@@ -23,21 +23,19 @@ RSpec.describe DDG::Adapter::MySQL do
 
   describe '#tables_with_foreign_keys' do
     context 'when there are tables with foreign keys in the database' do
+      let (:expected_table_to_fks) do
+        {
+          user_reports: %i[
+            reports
+            users
+          ]
+        }
+      end
+
       it 'returns a mapping from table to an array of foreign keys' do
         adapter = DDG::Adapter::MySQL.new(config)
         table_to_fks = adapter.tables_with_foreign_keys
-        expect(table_to_fks).to be_a(Hash)
-        expect(table_to_fks).to_not be_nil
-        expect(table_to_fks).to_not be_empty
-
-        table_to_fks.each do |table, fks|
-          expect(table).to be_a(Symbol)
-          expect(table).to_not be_nil
-          expect(table).to_not be_empty
-          expect(fks).to be_a(Array)
-          expect(fks).to_not be_nil
-          expect(fks).to_not be_empty
-        end
+        expect(table_to_fks).to eq(expected_table_to_fks)
       end
     end
   end

@@ -29,7 +29,11 @@ module DDG
           referenced_table_name = record[:referenced_table_name].to_sym
 
           table_to_fk[table_name] = [] unless table_to_fk.key?(table_name)
-          table_to_fk[table_name] << referenced_table_name
+
+          if !table_to_fk[table_name].include?(referenced_table_name) &&
+              table_name != referenced_table_name
+            table_to_fk[table_name] << referenced_table_name
+          end
         end
       end
 
