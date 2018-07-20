@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require 'ddg/adapter/postgresql'
 
 RSpec.describe DDG::Adapter::PostgreSQL do

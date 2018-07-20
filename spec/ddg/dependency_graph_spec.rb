@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require 'ddg/dependency_graph'
 
 RSpec.describe DDG::DependencyGraph do

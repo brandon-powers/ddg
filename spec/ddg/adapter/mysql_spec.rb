@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require 'ddg/adapter/mysql'
 
 RSpec.describe DDG::Adapter::MySQL do
