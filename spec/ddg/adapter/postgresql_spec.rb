@@ -21,7 +21,7 @@ RSpec.describe DDG::Adapter::PostgreSQL do
     }
   end
 
-  describe '::tables_with_foreign_keys' do
+  describe '#tables_with_foreign_keys' do
     context 'when there are tables with foreign keys in the database' do
       it 'returns a mapping from table to an array of foreign keys' do
         adapter = DDG::Adapter::PostgreSQL.new(config)
