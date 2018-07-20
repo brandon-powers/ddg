@@ -76,7 +76,10 @@ namespace :db do
         password: ENV['TEST_PASSWORD']
       )
       mysql_schema = File.read('db/schemata/mysql.sql')
-      conn.query(mysql_schema)
+
+      mysql_schema.strip.split(';').each do |query|
+        conn.query(query)
+      end
     end
   end
 
@@ -91,9 +94,9 @@ namespace :db do
         password: ENV['TEST_PASSWORD']
       )
 
+      conn.exec('DROP TABLE IF EXISTS user_reports CASCADE;')
       conn.exec('DROP TABLE IF EXISTS users CASCADE;')
       conn.exec('DROP TABLE IF EXISTS reports CASCADE;')
-      conn.exec('DROP TABLE IF EXISTS user_reports CASCADE;')
       conn.close
 
       drop_database_sql = "DROP DATABASE #{ENV['TEST_DATABASE']};"
@@ -113,9 +116,9 @@ namespace :db do
         password: ENV['TEST_PASSWORD']
       )
 
+      conn.query('DROP TABLE IF EXISTS user_reports CASCADE;')
       conn.query('DROP TABLE IF EXISTS users CASCADE;')
       conn.query('DROP TABLE IF EXISTS reports CASCADE;')
-      conn.query('DROP TABLE IF EXISTS user_reports CASCADE;')
       conn.close
 
       drop_database_sql = "DROP DATABASE #{ENV['TEST_DATABASE']};"

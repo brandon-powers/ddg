@@ -5,10 +5,12 @@ require 'ddg/adapter_factory'
 RSpec.describe DDG::AdapterFactory do
   before(:all) do
     system('bundle exec rake db:setup:postgresql')
+    system('bundle exec rake db:setup:mysql')
   end
 
   after(:all) do
     system('bundle exec rake db:teardown:postgresql')
+    system('bundle exec rake db:teardown:mysql')
   end
 
   let(:config) do
@@ -38,6 +40,8 @@ RSpec.describe DDG::AdapterFactory do
 
     context 'when MySQL is passed with valid configuration' do
       it 'returns an instance of DDG::Adapter::MySQL' do
+        adapter = DDG::AdapterFactory.adapter(:mysql, config)
+        expect(adapter).to be_a(DDG::Adapter::MySQL)
       end
     end
   end

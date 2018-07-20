@@ -22,11 +22,11 @@ module DDG
       #
       # @return [Hash]
       def tables_with_foreign_keys
-        records = @db.exec(foreign_key_sql).to_a
+        records = query(foreign_key_sql)
 
         records.each_with_object({}) do |record, table_to_fk|
-          table_name = record['table_name'].to_sym
-          referenced_table_name = record['referenced_table_name'].to_sym
+          table_name = record[:table_name].to_sym
+          referenced_table_name = record[:referenced_table_name].to_sym
 
           table_to_fk[table_name] = [] unless table_to_fk.key?(table_name)
           table_to_fk[table_name] << referenced_table_name

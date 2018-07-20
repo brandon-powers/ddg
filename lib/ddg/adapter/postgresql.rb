@@ -2,6 +2,7 @@
 
 require 'ddg/adapter/base'
 require 'pg'
+require 'json'
 
 module DDG
   module Adapter
@@ -14,6 +15,12 @@ module DDG
           password: config[:password],
           dbname: config[:database]
         )
+      end
+
+      def query(sql)
+        @db.exec(sql).to_a.map do |row|
+          JSON.parse(row.to_json, symbolize_names: true)
+        end
       end
     end
   end

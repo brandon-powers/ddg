@@ -1,30 +1,33 @@
--- DROP TABLE IF EXISTS users;
--- CREATE TABLE users (
---   id INT(11) NOT NULL AUTO_INCREMENT,
---   name VARCHAR(45) DEFAULT NULL,
---   created_at DATE DEFAULT NULL,
---   updated_at DATE DEFAULT NULL,
---
---   PRIMARY KEY (id)
--- ) ENGINE=InnoDB;
---
--- CREATE TABLE reports (
---   id INT NOT NULL,
---   name INT NOT NULL,
---   created_at TIMESTAMP,
---   updated_at TIMESTAMP,
---
---   PRIMARY KEY(id)
--- );
---
--- CREATE TABLE user_reports (
---   id INT NOT NULL,
---   user_id INT NOT NULL,
---   report_id INT NOT NULL,
---   created_at TIMESTAMP,
---   updated_at TIMESTAMP,
---
---   PRIMARY KEY(id),
---   FOREIGN KEY (user_id) REFERENCES users(id),
---   FOREIGN KEY (report_id) REFERENCES reports(id)
--- );
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` INTEGER AUTO_INCREMENT,
+  `name` VARCHAR(150) NOT NULL,
+  `created_at` DATE,
+  `updated_at` DATE,
+
+  PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `reports` (
+  `id` INTEGER AUTO_INCREMENT,
+  `name` VARCHAR(150) NOT NULL,
+  `created_at` DATE,
+  `updated_at` DATE,
+
+  PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `user_reports` (
+  `id` INTEGER AUTO_INCREMENT,
+  `user_id` INTEGER,
+  `report_id` INTEGER,
+  `name` VARCHAR(150) NOT NULL,
+  `created_at` DATE,
+  `updated_at` DATE,
+
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  FOREIGN KEY (`report_id`) REFERENCES `reports` (`id`)
+)
+ENGINE = InnoDB;
