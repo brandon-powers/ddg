@@ -17,7 +17,7 @@ RuboCop::RakeTask.new(:rubocop) do |t|
   t.options = ['-c', '.rubocop.yml']
 end
 
-task(default: %i[rubocop spec])
+task(default: %i[spec])
 
 namespace :ddg do
   desc 'Print the evaluation order of the database specified by the environment'
