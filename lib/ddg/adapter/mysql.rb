@@ -17,7 +17,7 @@ module DDG
         )
       end
 
-      def query(sql)
+      def select(sql)
         @db.query(sql).to_a.map do |row|
           JSON.parse(row.to_json, symbolize_names: true)
         end

@@ -22,7 +22,7 @@ module DDG
       #
       # @return [Hash]
       def tables_with_foreign_keys
-        records = query(foreign_key_sql)
+        records = select(foreign_key_sql)
 
         records.each_with_object({}) do |record, table_to_fk|
           table_name = record[:table_name].to_sym
