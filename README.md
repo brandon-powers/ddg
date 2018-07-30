@@ -1,7 +1,6 @@
 # Database Dependency Graph (DDG)
 
-[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/brandon-powers/ddg/master/LICENSE.txt?token=AJnVRQKKUJ8KbOh0KWc_dFspKwyO73sxks5bY12XwA%3D%3D)
-[![build-status](https://travis-ci.com/brandon-powers/ddg.svg?token=K9gDMpa56TyPTDdHanqY&branch=master)](https://travis-ci.com/brandon-powers/ddg.svg)
+![build-status](https://travis-ci.com/brandon-powers/ddg.svg?token=K9gDMpa56TyPTDdHanqY&branch=master)
 
   The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
 
