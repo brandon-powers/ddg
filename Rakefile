@@ -66,8 +66,8 @@ namespace :db do
         IDENTIFIED BY '#{ENV['TEST_PASSWORD']}';
       SQL
 
-      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{create_database_sql}\" 1>/dev/null 2>&1")
-      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{create_user_with_privileges_sql}\" 1>/dev/null 2>&1")
+      system("sudo mysql -u root -p -e \"#{create_database_sql}\" 1>/dev/null 2>&1")
+      system("sudo mysql -u root -p -e \"#{create_user_with_privileges_sql}\" 1>/dev/null 2>&1")
 
       conn = Mysql2::Client.new(
         username: ENV['TEST_USER'],
@@ -125,8 +125,8 @@ namespace :db do
       drop_database_sql = "DROP DATABASE #{ENV['TEST_DATABASE']};"
       drop_user_sql = "DROP USER '#{ENV['TEST_USER']}'@'#{ENV['TEST_HOST']}';"
 
-      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{drop_database_sql}\" 1>/dev/null 2>&1")
-      system("sudo mysql -u root --password=#{ENV['TEST_PASSWORD']} -e \"#{drop_user_sql}\" 1>/dev/null 2>&1")
+      system("sudo mysql -u root -p -e \"#{drop_database_sql}\" 1>/dev/null 2>&1")
+      system("sudo mysql -u root -p -e \"#{drop_user_sql}\" 1>/dev/null 2>&1")
     end
   end
 end

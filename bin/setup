@@ -20,6 +20,9 @@ sudo apt-get install -y libssl-dev libreadline-dev zlib1g-dev
 
 rbenv install 2.3.3
 
+# rbenv-vars plugin
+git clone https://github.com/rbenv/rbenv-vars.git $(rbenv root)/plugins/rbenv-vars
+
 # This installs the machine requirements to
 # interact with these data stores.
 sudo apt-get install postgresql postgresql-contrib postgresql-client
