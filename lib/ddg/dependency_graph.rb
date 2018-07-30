@@ -3,6 +3,7 @@
 require 'ddg/adapter_factory'
 require 'rgl/adjacency'
 require 'rgl/topsort'
+require 'rgl/dot'
 
 module DDG
   class DependencyGraph
@@ -32,6 +33,13 @@ module DDG
           @graph.add_edge(table, foreign_key)
         end
       end
+    end
+
+    def jpeg(filename)
+      require 'byebug'
+      byebug
+      build_graph unless graph_built?
+      @graph.write_to_graphic_file("#{filename}.jpg")
     end
 
     private

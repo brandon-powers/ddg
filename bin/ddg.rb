@@ -47,6 +47,10 @@ class CLI
         @config[:database] = database.to_s
       end
 
+      o.on('-j', '--jpeg FILENAME', String, 'JPEG Filename') do |jpeg|
+        @config[:jpeg] = jpeg
+      end
+
       evaluation_order_str = 'Print the evaluation order of the database ' \
                              'dependency graph specified by the environment'
 
@@ -58,26 +62,24 @@ class CLI
 
   def parse!(args)
     @opts.parse!(args)
-    return unless @actions[:evaluation_order]
 
     # TODO: These defaults should move to #initialize.
-
+    #
     # Default to using environment variables,
     # typically via .rbenv-vars.
-    if @config.empty?
-      @config = {
-        host: ENV['HOST'],
-        port: ENV['PORT'],
-        user: ENV['USER'],
-        password: ENV['PASSWORD'],
-        database: ENV['DATABASE']
-      }
-    end
-
-    @adapter = :postgresql if @adapter.nil?
+    @config = {
+      host: ENV['HOST'],
+      port: ENV['PORT'],
+      user: ENV['USER'],
+      password: ENV['PASSWORD'],
+      database: ENV['DATABASE']
+    }
+    @adapter = ENV['ADAPTER']
 
     graph = DDG::DependencyGraph.new(@adapter, @config)
-    puts(graph.evaluation_order)
+
+    puts(graph.evaluation_order) if @actions[:evaluation_order]
+    puts(graph.jpeg(@config[:jpeg])) if @config[:jpeg]
   end
 end
 
