@@ -27,17 +27,17 @@ module DDG
       @evaluation_order
     end
 
+    def visualize
+      build_graph unless graph_built?
+      @graph.write_to_graphic_file
+    end
+
     def build_graph
       @adapter.tables_with_foreign_keys.each do |table, foreign_keys|
         foreign_keys.each do |foreign_key|
           @graph.add_edge(table, foreign_key)
         end
       end
-    end
-
-    def visualize
-      build_graph unless graph_built?
-      @graph.write_to_graphic_file
     end
 
     private
