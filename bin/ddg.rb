@@ -11,7 +11,10 @@ require 'optparse'
 class CLI
   def initialize
     @config = {}
-    @actions = { evaluation_order: false }
+    @actions = {
+      evaluation_order: false,
+      visualize: false
+    }
     @adapter = nil
     @opts = option_parser
   end
@@ -47,15 +50,15 @@ class CLI
         @config[:database] = database.to_s
       end
 
-      o.on('-j', '--jpeg FILENAME', String, 'JPEG Filename') do |jpeg|
-        @config[:jpeg] = jpeg
-      end
-
       evaluation_order_str = 'Print the evaluation order of the database ' \
                              'dependency graph specified by the environment'
 
       o.on('-e', '--evaluation-order', evaluation_order_str) do |evaluation_order|
         @actions[:evaluation_order] = evaluation_order
+      end
+
+      o.on('-v', '--visualize', 'Generate a graph.png visualization') do |visualize|
+        @actions[:visualize] = visualize
       end
     end
   end
@@ -67,19 +70,17 @@ class CLI
     #
     # Default to using environment variables,
     # typically via .rbenv-vars.
-    @config = {
-      host: ENV['HOST'],
-      port: ENV['PORT'],
-      user: ENV['USER'],
-      password: ENV['PASSWORD'],
-      database: ENV['DATABASE']
-    }
-    @adapter = ENV['ADAPTER']
+    @config[:host] = ENV['HOST']
+    @config[:port] = ENV['PORT']
+    @config[:user] = ENV['USER']
+    @config[:password] = ENV['PASSWORD']
+    @config[:database] = ENV['DATABASE']
+    @adapter = ENV['ADAPTER'].to_sym
 
     graph = DDG::DependencyGraph.new(@adapter, @config)
 
     puts(graph.evaluation_order) if @actions[:evaluation_order]
-    puts(graph.jpeg(@config[:jpeg])) if @config[:jpeg]
+    graph.visualize if @actions[:visualize]
   end
 end
 

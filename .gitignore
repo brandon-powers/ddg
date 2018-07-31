@@ -2,3 +2,5 @@
 .rbenv-vars
 .rspec_status
 coverage
+graph.dot
+graph.png

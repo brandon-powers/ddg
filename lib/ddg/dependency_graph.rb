@@ -35,11 +35,9 @@ module DDG
       end
     end
 
-    def jpeg(filename)
-      require 'byebug'
-      byebug
+    def visualize
       build_graph unless graph_built?
-      @graph.write_to_graphic_file("#{filename}.jpg")
+      @graph.write_to_graphic_file
     end
 
     private
