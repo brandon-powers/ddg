@@ -2,7 +2,91 @@
 
 ![build-status](https://travis-ci.com/brandon-powers/ddg.svg?token=K9gDMpa56TyPTDdHanqY&branch=master)
 
-  The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
+**ddg** is a tool for building and manipulating database dependency graphs. Hence, the origin of the abbreviation.
+
+The database dependency graph is defined as follows: a directed, acyclic graph (DAG) where nodes represent tables and edges represent dependencies based on foreign key constraint(s). It currently supports two behaviors:
+1. Determining the evaluation order and optionally performing a task on each node in the evaluation order.
+2. Generating an image file containing a graph diagram of the database dependency graph.
+
+The data stores that **ddg** supports are the following:
+- MySQL
+- PostgreSQL
+- Redshift
+
+In theory, any data store that supports the information schema (ANSI-standard) is supported by the existing SQL used to extract table to foreign key mappings. However, if a data store is not currently supported, an adapter can be written rather easily by creating a new class inheriting from DDG::Adapter::Base.
+
+To add an adapter that supports the information schema:
+
+```ruby
+# frozen_string_literal: true
+
+require 'ddg/adapter/base'
+
+module DDG
+  module Adapter
+    class DataStore < Base
+      # TODO: Implement the constructor by assigning a client to @db.
+      def initialize(config)
+        @db = DataStoreClient.new(
+          host: config[:host],
+          port: config[:port],
+          username: config[:user],
+          password: config[:password],
+          database: config[:database]
+        )
+      end
+
+      # TODO: Implement the select function, which executes
+      # the SQL contained in the `sql` parameter and
+      # returns an Array of Hashes, representing named rows.
+      def select(sql)
+        [{}]
+      end
+    end
+  end
+end
+```
+
+To add an adapter that does NOT support the information schema:
+
+```ruby
+# frozen_string_literal: true
+
+require 'ddg/adapter/base'
+
+module DDG
+  module Adapter
+    class DataStore < Base
+      # TODO: Implement the constructor by assigning a client to @db.
+      def initialize(config)
+        @db = DataStoreClient.new
+      end
+
+      # TODO: Implement the following instance method.
+      #
+      # Retrieves a mapping from table to a
+      # set of its foreign key constraints.
+      #
+      # This query is supported by any relational
+      # database that supports the information
+      # schema (ANSI-standard).
+      #
+      # Example:
+      #   {
+      #     user_reports: [
+      #       :users,
+      #       :reports,
+      #       ...
+      #     ],
+      #     ...
+      #   }
+      #
+      # @return [Hash]
+      def tables_with_foreign_keys; end
+    end
+  end
+end
+```
 
 TODO:
   - Fix integration with Travis-CI.
@@ -14,18 +98,6 @@ TODO:
   - Write a blog post on DDG for Medium.
   - Share blog post and GitHub project on HackerNews, LinkedIn, Twitter, Instagram?, Facebook, Personal Website?.
 
-Supported Adapters:
-  - PostgreSQL/Redshift
-  - MySQL
-
-Supported Interfaces:
-  - Programmatically in Ruby
-  - CLI
-  - Rake
-
-Supported Behaviors:
-  - Find a valid evaluation order in the specified database, given referential constraints.
-
 Architecture Goals:
   - Duck-typing over abstract class hierarchy
   - Adapter interface that is extensible
@@ -36,16 +108,9 @@ Architecture Goals:
   - Example application that uses this gem/functionality
   - SemVer, CHANGELOG-compliant
 
-There was an initial thought of having a (sort of) abstract class in Ruby to serve as a parent class for any adapter being implemented. This was decided against and is now using the duck typing approach vs. inheritance to enforce the set of behaviors during run-time.
-
-There is a requirement that the user creating the database connection has read access to the `information_schema`.
-
 From the PostgreSQL documentation on information schema querying: "Only those constraints are shown for which the current user has write access to the referencing table (by way of being the owner or having some privilege other than SELECT)."
 
 The SQL to extract the foreign keys of each table was heavily influenced, barring minor changes, from this article: https://msdn.microsoft.com/en-us/library/aa175805(SQL.80).aspx.
-
-Blog Posts on DDG:
-  - https://medium.com/brandon-powers/whyddg (example)
 
 ## Installation
 
@@ -57,7 +122,7 @@ gem 'ddg'
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 Or install it yourself as:
 
