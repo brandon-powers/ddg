@@ -13,7 +13,7 @@ The data stores that **ddg** supports are the following:
 - PostgreSQL
 - Redshift
 
-In theory, any data store that supports the information schema (ANSI-standard) is supported by the existing SQL used to extract table to foreign key mappings. However, if a data store is not currently supported, an adapter can be written rather easily by creating a new class inheriting from DDG::Adapter::Base.
+In theory, any data store that supports the information schema (ANSI-standard) is supported by the existing SQL used to extract table to foreign key mappings. However, if a data store is not currently supported, an adapter can be written rather easily by creating a new class inheriting from `DDG::Adapter::Base`.
 
 To add an adapter that supports the information schema:
 
@@ -67,10 +67,6 @@ module DDG
       # Retrieves a mapping from table to a
       # set of its foreign key constraints.
       #
-      # This query is supported by any relational
-      # database that supports the information
-      # schema (ANSI-standard).
-      #
       # Example:
       #   {
       #     user_reports: [
@@ -88,7 +84,11 @@ module DDG
 end
 ```
 
-TODO:
+From the PostgreSQL documentation on information schema querying: "Only those constraints are shown for which the current user has write access to the referencing table (by way of being the owner or having some privilege other than SELECT)."
+
+The SQL to extract the foreign keys of each table was heavily influenced, barring minor changes, from this article: https://msdn.microsoft.com/en-us/library/aa175805(SQL.80).aspx.
+
+## TODO
   - Fix integration with Travis-CI.
   - Write documentation on DDG in this README.
   - Create a GIF at the top-level of the README to demonstrate basic usage and grab attention.
@@ -98,7 +98,7 @@ TODO:
   - Write a blog post on DDG for Medium.
   - Share blog post and GitHub project on HackerNews, LinkedIn, Twitter, Instagram?, Facebook, Personal Website?.
 
-Architecture Goals:
+## Architecture and Design Goals
   - Duck-typing over abstract class hierarchy
   - Adapter interface that is extensible
   - Adapter Factory uses Factory OO pattern
@@ -107,10 +107,6 @@ Architecture Goals:
   - CI/CD integration with Travis-CI
   - Example application that uses this gem/functionality
   - SemVer, CHANGELOG-compliant
-
-From the PostgreSQL documentation on information schema querying: "Only those constraints are shown for which the current user has write access to the referencing table (by way of being the owner or having some privilege other than SELECT)."
-
-The SQL to extract the foreign keys of each table was heavily influenced, barring minor changes, from this article: https://msdn.microsoft.com/en-us/library/aa175805(SQL.80).aspx.
 
 ## Installation
 
