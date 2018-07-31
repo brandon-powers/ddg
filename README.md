@@ -5,9 +5,6 @@
   The goal of this project is to write a tool that connects to relational data stores and outputs the dependency graph, where a node represents a table and an edge represents a dependency. The initial idea here is to use the foreign key constraints on a table to achieve this.
 
 TODO:
-  - Finish implementation and testing of MySQL adapter support.
-  - Add test coverage measurement and increase coverage.
-  - Add benchmark and performance testing.
   - Fix integration with Travis-CI.
   - Write documentation on DDG in this README.
   - Create a GIF at the top-level of the README to demonstrate basic usage and grab attention.
@@ -67,30 +64,9 @@ Or install it yourself as:
     $ gem install ddg
 
 
-## Adapter Interface
-
-```
-Adapter
-  #tables_with_foreign_keys
-```
-
-## Supported Adapters
-
-The goal is to rely on the `information_schema` standard of most relational databases. With that being said, any relational data store that supports the information schema standard, is also supported by this gem.
-
-At the moment:
-
-- PostgreSQL, Redshift
-- MySQL
-
-## DependencyGraph Interface
-
-```
-DependencyGraph
-  #evaluation_order
-```
-
 ## Usage
+
+To initialize a dependency graph:
 
 ```ruby
 require 'dependency_graph'
@@ -103,26 +79,42 @@ graph = DependencyGraph.new(
   port: 12345,
   host: 'www.example.com'
 )
+```
 
-# The evaluation order may be different on each run of #evaluation_order. This is
-# due to the nature of topological sorting on a directed acyclic graph (DAG),
-# which is the method used to evaluate the returned order.
+To print the evaluation order:
+
+```ruby
 puts(graph.evaluation_order)
 
->> [dim_tweets, fact_twitter_tweet_samples, dim_facebook_posts, fact_facebook_post_samples]
+# >> [users, reports, user_reports]
+```
 
-# You can also pass a Ruby block to #evaluation_order, which
-# executes the block on each node in the evaluation order.
+To perform an action on each node, in the evaluation order:
+
+```ruby
 graph.evaluation_order do |node|
   ETL.incremental_load(node)
 end
 ```
 
-You can also use the command-line interface (CLI), for example:
+To generate a graph.png image of the dependency graph:
+
+```ruby
+graph.visualize
+```
+
+To use the dependency graph with a CLI:
 
 ```sh
-$ dg -a postgresql -d dev -u dev_ro -x password123 -p 16379 -h dev.com --evaluation-order
->> [dim_tweets, fact_twitter_tweet_samples, dim_facebook_posts, fact_facebook_post_samples]
+$ ddg -a postgresql -d dev -u dev_ro -x password123 -p 16379 -h dev.com --evaluation-order
+# >> [users, reports, user_reports]
+```
+
+To use the dependency graph with a Rake command:
+
+```sh
+$ bundle exec rake ddg:evaluation_order
+# >> [users, reports, user_reports]
 ```
 
 ## Contributing
