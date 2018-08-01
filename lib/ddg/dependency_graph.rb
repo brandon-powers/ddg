@@ -27,9 +27,9 @@ module DDG
       @evaluation_order
     end
 
-    def visualize
+    def visualize(format, filename)
       build_graph unless graph_built?
-      @graph.write_to_graphic_file
+      @graph.write_to_graphic_file(fmt = format, dotfile = filename)
     end
 
     def build_graph

@@ -11,10 +11,7 @@ require 'optparse'
 class CLI
   def initialize
     @config = {}
-    @actions = {
-      evaluation_order: false,
-      visualize: false
-    }
+    @actions = { evaluation_order: false }
     @adapter = nil
     @opts = option_parser
   end
@@ -57,8 +54,9 @@ class CLI
         @actions[:evaluation_order] = evaluation_order
       end
 
-      o.on('-v', '--visualize', 'Generate a graph.png visualization') do |visualize|
-        @actions[:visualize] = visualize
+      o.on('-v', '--visualize FORMAT, FILENAME', Array, 'Generate a <filename>.<format> image file') do |visualize|
+        @config[:format] = visualize[0]
+        @config[:filename] = visualize[1]
       end
     end
   end
@@ -80,7 +78,7 @@ class CLI
     graph = DDG::DependencyGraph.new(@adapter, @config)
 
     puts(graph.evaluation_order) if @actions[:evaluation_order]
-    graph.visualize if @actions[:visualize]
+    graph.visualize(@config[:format], @config[:filename]) if @config[:format] && @config[:filename]
   end
 end
 
