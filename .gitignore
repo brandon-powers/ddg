@@ -4,3 +4,4 @@
 coverage
 *.dot
 *.png
+tmp*

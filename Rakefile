@@ -17,7 +17,7 @@ RuboCop::RakeTask.new(:rubocop) do |t|
   t.options = ['-c', '.rubocop.yml']
 end
 
-task(default: %i[spec])
+task(default: %i[spec rubocop])
 
 namespace :ddg do
   desc 'Print the evaluation order of the database specified by the environment'
@@ -39,12 +39,6 @@ namespace :db do
     desc 'Creates a PostgreSQL database with tables ' \
          'that have referential constraints on each other'
     task :postgresql do
-      create_user_sql = "CREATE USER #{ENV['TEST_USER']} WITH PASSWORD '#{ENV['TEST_PASSWORD']}';"
-      create_database_sql = "CREATE DATABASE #{ENV['TEST_DATABASE']} OWNER #{ENV['TEST_USER']};"
-
-      system("sudo -u postgres psql -c \"#{create_user_sql}\" 1>/dev/null 2>&1")
-      system("sudo -u postgres psql -c \"#{create_database_sql}\" 1>/dev/null 2>&1")
-
       conn = PG.connect(
         user: ENV['TEST_USER'],
         host: ENV['TEST_HOST'],
@@ -59,16 +53,6 @@ namespace :db do
     desc 'Creates a MySQL database with tables ' \
          'that have referential constraints on each other'
     task :mysql do
-      create_database_sql = "CREATE DATABASE #{ENV['TEST_DATABASE']}"
-      create_user_with_privileges_sql = <<~SQL
-        GRANT ALL PRIVILEGES ON #{ENV['TEST_DATABASE']}.*
-        TO '#{ENV['TEST_USER']}'@'#{ENV['TEST_HOST']}'
-        IDENTIFIED BY '#{ENV['TEST_PASSWORD']}';
-      SQL
-
-      system("sudo mysql -u root -p -e \"#{create_database_sql}\" 1>/dev/null 2>&1")
-      system("sudo mysql -u root -p -e \"#{create_user_with_privileges_sql}\" 1>/dev/null 2>&1")
-
       conn = Mysql2::Client.new(
         username: ENV['TEST_USER'],
         host: ENV['TEST_HOST'],
