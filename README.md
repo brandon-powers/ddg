@@ -171,13 +171,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## TODO
   - Fix integration with Travis-CI.
-  - Write documentation on DDG in this README.
-  - Create a GIF at the top-level of the README to demonstrate basic usage and grab attention.
-  - Clearly define external development and testing dependencies.
-  - Tag gem at 0.1.0 and publish it to RubyGems.
-  - Write an example application that uses this gem, and highlight or link it in the documentation here.
-  - Write a blog post on DDG for Medium.
-  - Share blog post and GitHub project on HackerNews, LinkedIn, Twitter, Instagram?, Facebook, Personal Website?.
+  - Write/Share a blog post on DDG for Medium.
 
 ## Architecture and Design Goals
   - Duck-typing over abstract class hierarchy
