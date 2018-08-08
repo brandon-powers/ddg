@@ -13,6 +13,77 @@ The data stores that **ddg** supports are the following:
 - PostgreSQL
 - Redshift
 
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'ddg'
+```
+
+And then execute:
+
+    $ bundle install
+
+Or install it yourself as:
+
+    $ gem install ddg
+
+## Usage
+
+**To initialize a dependency graph**:
+
+```ruby
+require 'dependency_graph'
+
+graph = DependencyGraph.new(
+  adapter: :postgresql,
+  database: 'database',
+  user: 'user',
+  password: 'password',
+  port: 12345,
+  host: 'www.example.com'
+)
+```
+
+**To print the evaluation order**:
+
+```ruby
+puts(graph.evaluation_order)
+
+# >> [users, reports, user_reports]
+```
+
+**To perform an action on each node, in the evaluation order**:
+
+```ruby
+graph.evaluation_order do |node|
+  ETL.incremental_load(node)
+end
+```
+
+**To generate a graph.png image of the dependency graph**:
+
+```ruby
+graph.visualize
+```
+
+**To use the dependency graph with a CLI**:
+
+```sh
+$ ddg -a postgresql -d dev -u dev_ro -x password123 -p 16379 -h dev.com --evaluation-order
+# >> [users, reports, user_reports]
+```
+
+**To use the dependency graph with a Rake command**:
+
+```sh
+$ bundle exec rake ddg:evaluation_order
+# >> [users, reports, user_reports]
+```
+
+## More on Adapters
+
 In theory, any data store that supports the information schema (ANSI-standard) is supported by the existing SQL used to extract table to foreign key mappings. However, if a data store is not currently supported, an adapter can be written rather easily by creating a new class inheriting from `DDG::Adapter::Base`.
 
 To add an adapter that supports the information schema:
@@ -88,6 +159,16 @@ From the PostgreSQL documentation on information schema querying: "Only those co
 
 The SQL to extract the foreign keys of each table was heavily influenced, barring minor changes, from this article: https://msdn.microsoft.com/en-us/library/aa175805(SQL.80).aspx.
 
+## Contributing
+
+Make sure to copy the `hooks/` directory into your local `.git/hooks/` directory to ensure the git hooks for this project run. Most notably, there exists a pre-commit hook that runs tests and a linter over the code, failing the commit if the tests or linter fails.
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/brandon-powers/ddg.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
 ## TODO
   - Fix integration with Travis-CI.
   - Write documentation on DDG in this README.
@@ -107,83 +188,3 @@ The SQL to extract the foreign keys of each table was heavily influenced, barrin
   - CI/CD integration with Travis-CI
   - Example application that uses this gem/functionality
   - SemVer, CHANGELOG-compliant
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'ddg'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install ddg
-
-
-## Usage
-
-To initialize a dependency graph:
-
-```ruby
-require 'dependency_graph'
-
-graph = DependencyGraph.new(
-  adapter: :postgresql,
-  database: 'database',
-  user: 'user',
-  password: 'password',
-  port: 12345,
-  host: 'www.example.com'
-)
-```
-
-To print the evaluation order:
-
-```ruby
-puts(graph.evaluation_order)
-
-# >> [users, reports, user_reports]
-```
-
-To perform an action on each node, in the evaluation order:
-
-```ruby
-graph.evaluation_order do |node|
-  ETL.incremental_load(node)
-end
-```
-
-To generate a graph.png image of the dependency graph:
-
-```ruby
-graph.visualize
-```
-
-To use the dependency graph with a CLI:
-
-```sh
-$ ddg -a postgresql -d dev -u dev_ro -x password123 -p 16379 -h dev.com --evaluation-order
-# >> [users, reports, user_reports]
-```
-
-To use the dependency graph with a Rake command:
-
-```sh
-$ bundle exec rake ddg:evaluation_order
-# >> [users, reports, user_reports]
-```
-
-## Contributing
-
-Make sure to copy the `hooks/` directory into your local `.git/hooks/` directory to ensure the git hooks for this project run. Most notably, there exists a pre-commit hook that runs tests and a linter over the code, failing the commit if the tests or linter fails.
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/brandon-powers/ddg.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
