@@ -4,16 +4,6 @@ require 'spec_helper'
 require 'ddg/adapter_factory'
 
 RSpec.describe DDG::AdapterFactory do
-  before(:all) do
-    system('bundle exec rake db:setup:postgresql')
-    system('bundle exec rake db:setup:mysql')
-  end
-
-  after(:all) do
-    system('bundle exec rake db:teardown:postgresql')
-    system('bundle exec rake db:teardown:mysql')
-  end
-
   let(:config) do
     {
       database: ENV['TEST_DATABASE'],
@@ -26,6 +16,9 @@ RSpec.describe DDG::AdapterFactory do
 
   describe '::adapter' do
     context 'when PostgreSQL is passed with valid configuration' do
+      before { system('bundle exec rake db:setup:postgresql') }
+      after  { system('bundle exec rake db:teardown:postgresql') }
+
       it 'returns an instance of DDG::Adapter::PostgreSQL' do
         adapter = DDG::AdapterFactory.adapter(:postgresql, config)
         expect(adapter).to be_a(DDG::Adapter::PostgreSQL)
@@ -33,6 +26,9 @@ RSpec.describe DDG::AdapterFactory do
     end
 
     context 'when Redshift is passed with valid configuration' do
+      before { system('bundle exec rake db:setup:postgresql') }
+      after  { system('bundle exec rake db:teardown:postgresql') }
+
       it 'returns an instance of DDG::Adapter::PostgreSQL' do
         adapter = DDG::AdapterFactory.adapter(:redshift, config)
         expect(adapter).to be_a(DDG::Adapter::PostgreSQL)
@@ -40,6 +36,9 @@ RSpec.describe DDG::AdapterFactory do
     end
 
     context 'when MySQL is passed with valid configuration' do
+      before { system('bundle exec rake db:setup:mysql') }
+      after  { system('bundle exec rake db:teardown:mysql') }
+
       it 'returns an instance of DDG::Adapter::MySQL' do
         adapter = DDG::AdapterFactory.adapter(:mysql, config)
         expect(adapter).to be_a(DDG::Adapter::MySQL)

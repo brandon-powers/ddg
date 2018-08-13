@@ -82,6 +82,16 @@ $ bundle exec rake ddg:evaluation_order
 # >> [users, reports, user_reports]
 ```
 
+## Architecture and Design Goals
+  - Lazy initialization, with an option to override. Depending on the number of tables and foreign keys in the data store, the operation of building the graph is expensive. Delay until absolutely necessary.
+  - Duck-typing over an abstract class hierarchy or interface.
+  - Extensible data store adapter interface.
+  - Factory pattern for instantiating adapters.
+  - Measured performance and benchmark testing.
+  - CI with Travis-CI.
+  - SemVer and CHANGELOG compliant.
+  - Example application that uses this gem and it's functionality.
+
 ## More on Adapters
 
 In theory, any data store that supports the information schema (ANSI-standard) is supported by the existing SQL used to extract table to foreign key mappings. However, if a data store is not currently supported, an adapter can be written rather easily by creating a new class inheriting from `DDG::Adapter::Base`.
@@ -172,13 +182,5 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## TODO
   - Fix integration with Travis-CI.
   - Write/Share a blog post on DDG for Medium.
-
-## Architecture and Design Goals
-  - Duck-typing over abstract class hierarchy
-  - Adapter interface that is extensible
-  - Adapter Factory uses Factory OO pattern
-  - Both data warehouses/dimensional models and general-purpose usage, in any relational database
-  - Measured performance and benchmark testing
-  - CI/CD integration with Travis-CI
-  - Example application that uses this gem/functionality
-  - SemVer, CHANGELOG-compliant
+  - Test additional cases (cycles, larger data models, etc.).
+  - Consider adding wrapper functions supported by RGL, which is an easy, low-hanging fruit improvement to make this tool more useful. The goal is to connect a database dependency graph to the hierarchical structure and operations of the graph data structure.

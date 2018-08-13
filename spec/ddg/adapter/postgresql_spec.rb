@@ -4,14 +4,6 @@ require 'spec_helper'
 require 'ddg/adapter/postgresql'
 
 RSpec.describe DDG::Adapter::PostgreSQL do
-  before(:all) do
-    system('bundle exec rake db:setup:postgresql')
-  end
-
-  after(:all) do
-    system('bundle exec rake db:teardown:postgresql')
-  end
-
   let(:config) do
     {
       database: ENV['TEST_DATABASE'],
@@ -23,6 +15,9 @@ RSpec.describe DDG::Adapter::PostgreSQL do
   end
 
   describe '#tables_with_foreign_keys' do
+    before { system('bundle exec rake db:setup:postgresql') }
+    after  { system('bundle exec rake db:teardown:postgresql') }
+
     context 'when there are tables with foreign keys in the database' do
       let(:expected_table_to_fks) do
         {

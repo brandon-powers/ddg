@@ -52,6 +52,14 @@ RSpec.describe DDG::DependencyGraph do
         expect(graph.evaluation_order).to eq(%i[reports users user_reports])
       end
     end
+
+    context 'when a cycle exists' do
+      it 'returns nil' do
+      end
+    end
+  end
+
+  describe '#visualize' do
   end
 
   describe '#build_graph' do
