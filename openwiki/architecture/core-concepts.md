@@ -17,7 +17,7 @@ is a thin wrapper around these two pieces.
 Source: [lib/ddg/dependency_graph.rb](../../lib/ddg/dependency_graph.rb).
 
 ```ruby
-graph = DependencyGraph.new(adapter: :postgresql, database: 'db', user: 'u', password: 'p', port: 1234, host: 'h')
+graph = DDG::DependencyGraph.new(:postgresql, database: 'db', user: 'u', password: 'p', port: 1234, host: 'h')
 ```
 
 - **Construction** (`initialize(adapter, config)`) does *not* touch the database. It only builds an adapter instance
@@ -90,8 +90,9 @@ Both adapters take the same `config` hash shape: `{ host:, port:, user:, passwor
 
 ### Adding a new adapter
 
-The README documents two extension paths (reproduced conceptually here; see
-[README.md § More on Adapters](../../README.md) for the full code templates):
+There are two extension paths, following the same pattern as the existing
+[PostgreSQL](../../lib/ddg/adapter/postgresql.rb) and [MySQL](../../lib/ddg/adapter/mysql.rb) adapters (the README no
+longer includes code templates for this — it now just links here):
 
 - **Information-schema-supporting stores**: subclass `DDG::Adapter::Base`, implement `initialize(config)` to set
   `@db`, and implement `select(sql)` to execute `sql` and return an `Array<Hash>` of symbol-keyed rows. You get

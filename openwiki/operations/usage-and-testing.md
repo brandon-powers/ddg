@@ -40,10 +40,10 @@ this CLI, be aware of that ordering bug/quirk before "fixing" it silently.
 
 Example from the README:
 ```sh
-$ ddg -a postgresql -d dev -u dev_ro -x password123 -p 16379 -h dev.com --evaluation-order
+$ ddg -a postgresql -d mydb -u me -W secret -p 5432 -h localhost --evaluation-order
 ```
-(Note: the README example uses `-x` for password, but the actual parser defines `-W/--password`; treat the README
-flag list as slightly stale relative to `bin/ddg.rb` and prefer the source when they disagree.)
+(The README previously showed a `-x` flag for password; it was corrected to match the actual `-W/--password` flag
+defined in `bin/ddg.rb`.)
 
 ### 3. Rake task
 
@@ -110,8 +110,9 @@ Known gaps in current coverage (see also Backlog in [quickstart.md](../quickstar
 
 ## CI and lint
 
-- **Travis CI**: [.travis.yml](../../.travis.yml) declares `language: ruby` only; no further Travis config is
-  present in-repo (the README's `## TODO` notes "Fix integration with Travis-CI" as a known open item).
+- **Travis CI**: [.travis.yml](../../.travis.yml) declares `language: ruby` only; no further Travis config (build
+  matrix, service setup for MySQL/PostgreSQL, etc.) is present in-repo, so the integration-style spec suite likely
+  cannot pass unmodified in CI as configured today.
 - **RuboCop**: configured via [.rubocop.yml](../../.rubocop.yml) and wired into `rake rubocop`
   ([Rakefile](../../Rakefile)).
 - **Default Rake task**: `task(default: %i[spec rubocop])` — running bare `bundle exec rake` runs the full spec

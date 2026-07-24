@@ -41,7 +41,7 @@ Source: [README.md](../README.md), [lib/ddg/dependency_graph.rb](../lib/ddg/depe
 - **Version**: `0.1.0` ([lib/ddg/version.rb](../lib/ddg/version.rb)); published as the `ddg` RubyGem
   ([ddg.gemspec](../ddg.gemspec)).
 
-## Design goals (from README)
+## Design goals
 
 - Lazy graph initialization (building the graph is expensive; delay until an operation actually needs it), with an
   option to force a build via `#build_graph`.
@@ -57,8 +57,6 @@ Source: [README.md](../README.md), [lib/ddg/dependency_graph.rb](../lib/ddg/depe
 2. Read [operations/usage-and-testing.md](operations/usage-and-testing.md) to understand how to run the gem locally,
    how the integration-style spec suite provisions real MySQL/PostgreSQL databases, and what CI/lint checks gate
    changes.
-3. Check the `## TODO` section of [README.md](../README.md) for gem-owner-acknowledged gaps (Travis-CI integration,
-   additional test cases like cycles, and potential RGL wrapper functions).
 
 ## Backlog
 
