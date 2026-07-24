@@ -48,9 +48,9 @@ $ bundle exec rake ddg:evaluation_order
 Full documentation lives in the **[OpenWiki](https://github.com/langchain-ai/openwiki)-generated
 wiki** — start at **[`openwiki/quickstart.md`](openwiki/quickstart.md)** and follow its links:
 
-- [Core concepts](openwiki/architecture/core-concepts.md) — the `DependencyGraph` engine and the
+- [Core concepts](openwiki/core-concepts.md) — the `DependencyGraph` engine and the
   adapter extensibility model (adding a new data store).
-- [Usage & testing](openwiki/operations/usage-and-testing.md) — entry points, environment
+- [Usage & testing](openwiki/usage-and-testing.md) — entry points, environment
   configuration, test fixtures, the spec suite, and CI/lint.
 
 The wiki is regenerated from source, so it stays in sync with the code. This README is the only

@@ -1,70 +1,95 @@
 ---
 type: Overview
 title: DDG (Database Dependency Graph) Quickstart
-description: Entry-point overview of the ddg Ruby gem, which builds a directed acyclic graph of database tables from foreign-key constraints to compute a safe evaluation order or render a visual diagram, covering its library/CLI/Rake entry points and adapter extensibility model.
-tags: [ruby-gem, database, dependency-graph, quickstart]
+description: Entry point for the ddg Ruby gem wiki. Explains what ddg does, how the pieces fit together, and where to go next for core engine details or CLI/testing/operations guidance.
+tags: [ruby, gem, database, dag, etl]
 ---
 
-# DDG (Database Dependency Graph) Quickstart
+# DDG (Database Dependency Graph) — Quickstart
 
-**ddg** is a small Ruby gem for building and manipulating **database dependency graphs**. A database dependency
-graph is a directed acyclic graph (DAG) where nodes are tables and edges are foreign-key constraints. The gem exists
-to answer two practical questions about a relational schema:
+**ddg** is a small Ruby gem that inspects a relational database's foreign-key constraints and
+builds a **directed acyclic graph (DAG)** of tables. From that graph it computes a **topologically
+sorted evaluation order** — the order in which tables can be safely loaded, seeded, or migrated
+without violating a foreign-key constraint — and can also render the graph as a diagram.
 
-1. **What order should tables be processed in** so that a table is always handled after everything it depends on
-   (its foreign keys)? This is useful for incremental ETL loads, seeding, migrations, or any per-table task that must
-   respect referential integrity.
-2. **What does the dependency graph look like**, as a rendered diagram, for documentation or debugging?
+Typical use cases: ETL load ordering, database seeding scripts, migration planning, and visually
+understanding a schema's referential structure.
 
-Source: [README.md](../README.md), [lib/ddg/dependency_graph.rb](../lib/ddg/dependency_graph.rb).
+Supported databases: **PostgreSQL**, **MySQL**, and **Redshift** (Redshift reuses the PostgreSQL
+adapter, see [Core Concepts](/openwiki/core-concepts.md)).
+
+## The three ways to use it
+
+1. **As a library**, via `DDG::DependencyGraph`:
+
+   ```ruby
+   require 'ddg'
+
+   graph = DDG::DependencyGraph.new(
+     :postgresql,
+     host: 'localhost', port: 5432,
+     database: 'mydb', user: 'me', password: 'secret'
+   )
+
+   puts graph.evaluation_order
+   # => [:users, :reports, :user_reports]
+
+   graph.visualize('png', 'graph') # writes graph.png
+   ```
+
+2. **As a CLI** (`bin/ddg.rb`, installed as the `ddg` executable):
+
+   ```sh
+   $ ddg -a postgresql -d mydb -u me -W secret -p 5432 -h localhost --evaluation-order
+   ```
+
+3. **Via Rake**, reading connection info from the environment:
+
+   ```sh
+   $ bundle exec rake ddg:evaluation_order
+   ```
+
+See [Usage & Testing](/openwiki/usage-and-testing.md) for full CLI flags, Rake tasks, and
+environment variable configuration.
 
 ## How it's organized
 
-| Page | Covers |
-|---|---|
-| [architecture/core-concepts.md](architecture/core-concepts.md) | The `DependencyGraph` engine, the adapter system (`AdapterFactory`, `Adapter::Base`, PostgreSQL/MySQL adapters), how the graph is built and topologically sorted, and how to add a new data-store adapter. |
-| [operations/usage-and-testing.md](operations/usage-and-testing.md) | The three ways to invoke ddg (library, CLI, Rake), environment-variable configuration, the test fixture schemas, the spec suite, and CI/lint/pre-commit tooling. |
+| Concept | What it covers | Page |
+|---|---|---|
+| Core engine & adapters | `DependencyGraph`, `AdapterFactory`, `Adapter::Base`, and how PostgreSQL/MySQL adapters query `information_schema` for foreign keys; how to add a new adapter | [core-concepts.md](/openwiki/core-concepts.md) |
+| Usage, CLI & testing | CLI options, Rake tasks (`ddg:evaluation_order`, `db:setup:*`/`db:teardown:*`), environment variables, spec suite & fixtures, CI/lint/git hooks | [usage-and-testing.md](/openwiki/usage-and-testing.md) |
 
-## At a glance
+## Repository map
 
-- **Supported data stores**: MySQL, PostgreSQL, and Redshift (Redshift is treated as PostgreSQL-compatible; see
-  [architecture/core-concepts.md](architecture/core-concepts.md)).
-- **Core algorithm**: foreign keys are read via the ANSI-standard `information_schema`, assembled into a directed
-  graph using the [`rgl`](https://github.com/monora/rgl) gem, then topologically sorted and reversed to produce a
-  dependency-respecting evaluation order.
-- **Three entry points**: `require 'ddg'` in Ruby code, the `ddg` executable (`bin/ddg.rb`), or `bundle exec rake
-  ddg:evaluation_order`. All three ultimately construct a `DDG::AdapterFactory`-backed `DDG::DependencyGraph`. See
-  [operations/usage-and-testing.md](operations/usage-and-testing.md).
-- **Extensibility**: any data store that supports the information schema needs no new SQL — just a new
-  `DDG::Adapter::Base` subclass implementing `initialize` and `select`. Stores without an information schema instead
-  override `tables_with_foreign_keys` directly. See [architecture/core-concepts.md](architecture/core-concepts.md).
-- **Version**: `0.1.0` ([lib/ddg/version.rb](../lib/ddg/version.rb)); published as the `ddg` RubyGem
-  ([ddg.gemspec](../ddg.gemspec)).
+- `lib/ddg.rb` — gem entrypoint, requires `dependency_graph` and `version`.
+- `lib/ddg/dependency_graph.rb` — the core `DependencyGraph` class (graph build + topsort +
+  visualization). See [core-concepts.md](/openwiki/core-concepts.md).
+- `lib/ddg/adapter_factory.rb`, `lib/ddg/adapter/{base,postgresql,mysql}.rb` — database adapter
+  layer. See [core-concepts.md](/openwiki/core-concepts.md).
+- `bin/ddg.rb` — CLI wrapper (`OptionParser`-based). See [usage-and-testing.md](/openwiki/usage-and-testing.md).
+- `Rakefile` — default `rake` task (spec + rubocop), `ddg:evaluation_order`, and test-database
+  `db:setup:*`/`db:teardown:*` tasks. See [usage-and-testing.md](/openwiki/usage-and-testing.md).
+- `db/schemata/{postgresql,mysql}.sql` — fixture schema (`users`, `reports`, `user_reports`) used
+  by the spec suite and by `rake db:setup:*`. See [usage-and-testing.md](/openwiki/usage-and-testing.md).
+- `spec/` — RSpec suite mirroring `lib/ddg/`. See [usage-and-testing.md](/openwiki/usage-and-testing.md).
+- `hooks/pre-commit`, `.rubocop.yml`, `.travis.yml` — local git hook and CI/lint configuration.
+  See [usage-and-testing.md](/openwiki/usage-and-testing.md).
+- `.github/workflows/openwiki-update.yml` — scheduled GitHub Actions workflow that regenerates this
+  wiki daily via `openwiki code --update --print`. `AGENTS.md`/`CLAUDE.md` point agents at this wiki
+  as the source of truth; treat generated pages as the canonical docs rather than hand-editing them.
 
-## Design goals
+## Where to start making a change
 
-- Lazy graph initialization (building the graph is expensive; delay until an operation actually needs it), with an
-  option to force a build via `#build_graph`.
-- Duck-typing over strict interfaces/abstract classes for adapters.
-- Factory pattern (`DDG::AdapterFactory`) for instantiating the right adapter.
-- SemVer + `CHANGELOG.md` compliance, Travis CI, RuboCop linting, and a pre-commit hook that runs the full Rake
-  default task (spec + rubocop) before allowing a commit.
-
-## Where to start as a new contributor or agent
-
-1. Read [architecture/core-concepts.md](architecture/core-concepts.md) to understand `DependencyGraph` and the
-   adapter contract — this is the entire "business logic" of the gem.
-2. Read [operations/usage-and-testing.md](operations/usage-and-testing.md) to understand how to run the gem locally,
-   how the integration-style spec suite provisions real MySQL/PostgreSQL databases, and what CI/lint checks gate
-   changes.
+- **Changing how the graph is built or ordered** (e.g. cycle handling, evaluation order logic) →
+  start in [core-concepts.md](/openwiki/core-concepts.md) and `lib/ddg/dependency_graph.rb`;
+  run the `DependencyGraph` specs described in [usage-and-testing.md](/openwiki/usage-and-testing.md).
+- **Adding a new database adapter** (e.g. SQLite, SQL Server) → see the extensibility model in
+  [core-concepts.md](/openwiki/core-concepts.md).
+- **Changing CLI flags, Rake tasks, or test fixtures** → see
+  [usage-and-testing.md](/openwiki/usage-and-testing.md).
 
 ## Backlog
 
-- **Redshift-specific adapter** (`lib/ddg/adapter_factory.rb`): Redshift currently reuses the PostgreSQL adapter with
-  no dedicated class or tests; deferred because there is no Redshift-specific code or spec coverage to document
-  beyond that mapping, which is already noted in architecture/core-concepts.md.
-- **Cycle detection in `DependencyGraph#evaluation_order`** (`spec/ddg/dependency_graph_spec.rb`, context "when a
-  cycle exists"): the spec exists but its body is empty, so actual cycle behavior is undefined/undocumented upstream;
-  flagged rather than documented as a page since there is no implementation evidence to describe.
-- **CHANGELOG.md accuracy**: its content (Korean/German translation notes) appears to be unedited Keep-a-Changelog
-  template boilerplate rather than ddg-specific history; not treated as a source of truth anywhere in this wiki.
+- **CHANGELOG.md** (repo root) — present but contains only a stale, unrelated 2018 entry
+  (translation fixes) that does not describe ddg's own history; not documented further since it
+  carries no current signal.
